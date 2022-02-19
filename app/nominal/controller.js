@@ -47,40 +47,40 @@ module.exports = {
       res.redirect('/nominal');
     }
   },
-  // viewEdit: async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
-  //     const category = await Category.findById(id);
+  viewEdit: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const nominal = await Nominal.findById(id);
 
-  //     res.render('admin/category/edit', {
-  //       category
-  //     })
-  //   } catch (error) {
-  //     req.flash('alertMessage', `${error.message}`);
-  //     req.flash('alertStatus', 'danger');
-  //     res.redirect('/nominal');
-  //   }
-  // },
-  // actionEdit: async (req, res) => {
-  //   try {
-  //     req.flash('alertMessage', 'Berhasil ubah kategori');
-  //     req.flash('alertStatus', 'success');
+      res.render('admin/nominal/edit', {
+        nominal
+      })
+    } catch (error) {
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/nominal');
+    }
+  },
+  actionEdit: async (req, res) => {
+    try {
+      req.flash('alertMessage', 'Berhasil mengubah koin');
+      req.flash('alertStatus', 'success');
 
-  //     const { id } = req.params;
-  //     const { name } = req.body;
+      const { id } = req.params;
+      const { coinQuantity, coinName, price } = req.body;
 
-  //     const category = await Category.findOneAndUpdate(
-  //       { _id: id },
-  //       {name}
-  //     );
+      await Nominal.findOneAndUpdate(
+        { _id: id },
+        {coinQuantity, coinName, price}
+      );
 
-  //     res.redirect('/nominal');
-  //   } catch (error) {
-  //     req.flash('alertMessage', `${error.message}`);
-  //     req.flash('alertStatus', 'danger');
-  //     res.redirect('/nominal');
-  //   }
-  // },
+      res.redirect('/nominal');
+    } catch (error) {
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/nominal');
+    }
+  },
   // actionDelete: async (req, res) => {
   //   try {
   //     req.flash('alertMessage', 'Berhasil hapus kategori');

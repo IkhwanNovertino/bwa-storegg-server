@@ -16,8 +16,8 @@
       <td><%= e.coinQuantity %></td>
       <td><%= e.price %></td>
       <td>
-        <form action="/nominal/delete/<%= nominal._id %>?_method=DELETE" method="post">
-          <a href="/nominal/edit/<%= nominal._id %>" class="btn btn-warning">
+        <form action="/nominal/delete/<%= e._id %>?_method=DELETE" method="post">
+          <a href="/nominal/edit/<%= e._id %>" class="btn btn-warning">
             <i class="fas fa-pencil-alt"></i>
             Ubah
           </a>
