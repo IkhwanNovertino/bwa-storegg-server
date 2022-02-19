@@ -81,20 +81,20 @@ module.exports = {
       res.redirect('/nominal');
     }
   },
-  // actionDelete: async (req, res) => {
-  //   try {
-  //     req.flash('alertMessage', 'Berhasil hapus kategori');
-  //     req.flash('alertStatus', 'success');
+  actionDelete: async (req, res) => {
+    try {
+      req.flash('alertMessage', 'Berhasil hapus koin');
+      req.flash('alertStatus', 'success');
 
-  //     const { id } = req.params;
+      const { id } = req.params;
 
-  //     const category = await Category.deleteOne({ _id: id });
+      await Nominal.deleteOne({ _id: id });
 
-  //     res.redirect('/nominal');
-  //   } catch (error) {
-  //     req.flash('alertMessage', `${error.message}`);
-  //     req.flash('alertStatus', 'danger');
-  //     res.redirect('/nominal');
-  //   }
-  // }
+      res.redirect('/nominal');
+    } catch (error) {
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/nominal');
+    }
+  }
 }
