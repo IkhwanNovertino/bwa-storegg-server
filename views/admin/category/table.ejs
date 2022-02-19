@@ -12,8 +12,8 @@
       <td><%= i %></td>
       <td><%= category.name %></td>
       <td>
-        <form action="">
-          <a href="" class="btn btn-warning">
+        <form action="/category/delete/<%= category._id %>?_method=DELETE" method="post">
+          <a href="/category/edit/<%= category._id %>" class="btn btn-warning">
             <i class="fas fa-pencil-alt"></i>
             Ubah
           </a>
