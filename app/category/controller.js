@@ -3,24 +3,38 @@ const Category = require('./model')
 module.exports = {
   index: async (req, res) => {
     try {
-      const category = await Category.find();
+      const alertMessage = req.flash('alertMessage');
+      const alertStatus = req.flash('alertStatus');
 
+      const alert = { message: alertMessage, status: alertStatus };
+      
+      const category = await Category.find();
+      
       res.render('admin/category/view_category', {
-        category
+        category,
+        alert
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/category');
     }
   },
   viewCreate: async (req, res) => {
     try {
       res.render('admin/category/create')
     } catch (error) {
-      console.log(error);
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/category');
     }
   },
   actionCreate: async (req, res) => {
     try {
+
+      req.flash('alertMessage', 'Berhasil tambah kategori');
+      req.flash('alertStatus', 'success');
+
       const { name } = req.body;
 
       let category = await Category({ name });
@@ -28,7 +42,9 @@ module.exports = {
 
       res.redirect('/category');
     } catch (error) {
-      console.log(error);
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/category');
     }
   },
   viewEdit: async (req, res) => {
@@ -40,11 +56,16 @@ module.exports = {
         category
       })
     } catch (error) {
-      console.log(error);
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/category');
     }
   },
   actionEdit: async (req, res) => {
     try {
+      req.flash('alertMessage', 'Berhasil ubah kategori');
+      req.flash('alertStatus', 'success');
+
       const { id } = req.params;
       const { name } = req.body;
 
@@ -55,18 +76,25 @@ module.exports = {
 
       res.redirect('/category');
     } catch (error) {
-      console.log(error);
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/category');
     }
   },
   actionDelete: async (req, res) => {
     try {
+      req.flash('alertMessage', 'Berhasil hapus kategori');
+      req.flash('alertStatus', 'success');
+
       const { id } = req.params;
 
       const category = await Category.deleteOne({ _id: id });
 
       res.redirect('/category');
     } catch (error) {
-      console.log(error);
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/category');
     }
   }
 }
