@@ -42,7 +42,7 @@
         <% } %>
       </td>
       <td>
-        <form action="" class="d-inline-block">
+        <form action="/voucher/status/<%= e._id %>?_method=PUT" method="post" class="d-inline-block">
           <button class="btn btn-outline-primary btn-sm">
             <i class="fas fa-folder"></i>
             <% if (e.status === 'Y') { %>
