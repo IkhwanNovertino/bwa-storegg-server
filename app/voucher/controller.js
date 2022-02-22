@@ -82,40 +82,89 @@ module.exports = {
       res.redirect('/voucher');
     }
   },
-  // viewEdit: async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
-  //     const voucher = await voucher.findById(id);
+  viewEdit: async (req, res) => {
+    try {
+      const { id } = req.params;
 
-  //     res.render('admin/voucher/edit', {
-  //       voucher
-  //     })
-  //   } catch (error) {
-  //     req.flash('alertMessage', `${error.message}`);
-  //     req.flash('alertStatus', 'danger');
-  //     res.redirect('/voucher');
-  //   }
-  // },
-  // actionEdit: async (req, res) => {
-  //   try {
-  //     req.flash('alertMessage', 'Berhasil mengubah koin');
-  //     req.flash('alertStatus', 'success');
+      const category = await Category.find();
+      const nominal = await Nominal.find();
+      const voucher = await Voucher.findById(id);
 
-  //     const { id } = req.params;
-  //     const { coinQuantity, coinName, price } = req.body;
+      res.render('admin/voucher/edit', {
+        voucher,
+        nominal,
+        category
+      })
+    } catch (error) {
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/voucher');
+    }
+  },
+  actionEdit: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, category, nominals } = req.body;
 
-  //     await voucher.findOneAndUpdate(
-  //       { _id: id },
-  //       {coinQuantity, coinName, price}
-  //     );
+      if (req.file) {
+        let tmp_path = req.file.path;
+        let originalExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
+        let filename = req.file.filename + '.' + originalExt;
+        let target_path = path.resolve(config.rootPath, `public/uploads/${filename}`);
 
-  //     res.redirect('/voucher');
-  //   } catch (error) {
-  //     req.flash('alertMessage', `${error.message}`);
-  //     req.flash('alertStatus', 'danger');
-  //     res.redirect('/voucher');
-  //   }
-  // },
+        const src = fs.createReadStream(tmp_path);
+        const dest = fs.createWriteStream(target_path);
+
+        src.pipe(dest)
+        src.on('end', async () => {
+          try {
+
+            const voucher = await Voucher.findOne({ _id: id });
+
+            let currentImage = `${config.rootPath}/public/uploads/${voucher.thumbnail}`;
+            if (fs.existsSync(currentImage)) {
+              fs.unlinkSync(currentImage);
+            }
+
+            await Voucher.findOneAndUpdate(
+              { _id: id },
+              {
+                name,
+                category,
+                nominals,
+                thumbnail: filename
+              }
+            )
+
+            req.flash('alertMessage', 'Berhasil mengubah voucher');
+            req.flash('alertStatus', 'success');
+            res.redirect('/voucher');
+          } catch (error) {
+            req.flash('alertMessage', `${error.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/voucher');
+          }
+        })
+      } else {
+        await Voucher.findOneAndUpdate(
+          { _id: id },
+          {
+            name,
+            category,
+            nominals,
+          }
+        )
+
+        req.flash('alertMessage', 'Berhasil mengubah voucher');
+        req.flash('alertStatus', 'success');
+        res.redirect('/voucher');
+      }
+    } catch (error) {
+      req.flash('alertMessage', `${error.message}`);
+      req.flash('alertStatus', 'danger');
+      res.redirect('/voucher');
+    }
+  },
   // actionDelete: async (req, res) => {
   //   try {
   //     req.flash('alertMessage', 'Berhasil hapus koin');
