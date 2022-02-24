@@ -17,6 +17,8 @@ module.exports = {
       console.log(voucher);
 
       res.render('admin/voucher/view_voucher', {
+        name: req.session.user.name,
+        title: 'Halaman Voucher',
         alert,
         voucher
       });
@@ -32,6 +34,8 @@ module.exports = {
       const category = await Category.find();
       const nominal = await Nominal.find();
       res.render('admin/voucher/create', {
+        name: req.session.user.name,
+        title: 'Halaman Tambah Voucher',
         category,
         nominal
       })
@@ -94,6 +98,8 @@ module.exports = {
       const voucher = await Voucher.findById(id);
 
       res.render('admin/voucher/edit', {
+        name: req.session.user.name,
+        title: 'Halaman Ubah Voucher',
         voucher,
         nominal,
         category
