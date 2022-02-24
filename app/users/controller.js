@@ -11,6 +11,7 @@ module.exports = {
 
       if (req.session.user === null || req.session.user === undefined) {
         res.render('admin/users/view_signin', {
+          title: 'Login',
           alert
         });
       } else {
@@ -56,12 +57,15 @@ module.exports = {
         req.flash('alertStatus', 'danger');
         res.redirect('/');
       }
-
-
     } catch (error) {
       req.flash('alertMessage', `${error.message}`);
       req.flash('alertStatus', 'danger');
       res.redirect('/');
     }
+  },
+
+  actionLogout: (req, res) => {
+    req.session.destroy();
+    res.redirect('/')
   }
 }
