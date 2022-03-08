@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const HASH_ROUND = 10;
 
 let playerSchema = mongoose.Schema({
   email: {
@@ -31,7 +33,7 @@ let playerSchema = mongoose.Schema({
   status: {
     type: String,
     enum: ['Y', 'N'],
-    default: ['Y']
+    default: 'Y'
   },
   avatar: {
     type: String
@@ -45,10 +47,27 @@ let playerSchema = mongoose.Schema({
     maxLength: [13, 'no. Telpon harus antara 9 - 13 karakter'],
     minLength: [9, 'no. Telpon harus antara 9 - 13 karakter'],
   },
-  favourite: {
+  favorite: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category'
   }
 }, { timestamps: true }) // untuk menambahkan createdAt dan updateAt di document(table)
+
+//untuk menvalidasi apakah ada email yg sama
+playerSchema.path('email').validate(async function (value) {
+  try {
+    const count = await this.model('Player').countDocuments({ email: value })
+    return !count;
+  } catch (err) {
+    throw err
+  }
+
+}, attr => `${attr.value} sudah terdaftar`)
+
+//untuk membuat passwordnya di hash
+playerSchema.pre('save', function (next) {
+  this.password = bcrypt.hashSync(this.password, HASH_ROUND);
+  next();
+})
 
 module.exports = mongoose.model('Player', playerSchema);

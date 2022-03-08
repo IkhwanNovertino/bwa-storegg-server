@@ -21,7 +21,7 @@ let userSchema = mongoose.Schema({
   status: {
     type: String,
     enum: ['Y', 'N'],
-    default: ['Y']
+    default: 'Y'
   },
   phoneNumber: {
     type: Number,
