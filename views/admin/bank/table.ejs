@@ -13,8 +13,8 @@
     <tr>
       <td><%= i %></td>
       <td><%= e.name %></td>
-      <td><%= e.nameOfBank %></td>
-      <td><%= e.noRek %></td>
+      <td><%= e.bankName %></td>
+      <td><%= e.noRekening %></td>
       <td>
         <form action="/bank/delete/<%= e._id %>?_method=DELETE" method="post">
           <a href="/bank/edit/<%= e._id %>" class="btn btn-warning btn-sm">
