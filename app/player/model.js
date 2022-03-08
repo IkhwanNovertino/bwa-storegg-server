@@ -44,8 +44,11 @@ let playerSchema = mongoose.Schema({
     require: [true, 'Nomor HP harus diisi'],
     maxLength: [13, 'no. Telpon harus antara 9 - 13 karakter'],
     minLength: [9, 'no. Telpon harus antara 9 - 13 karakter'],
+  },
+  favourite: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
   }
-
 }, { timestamps: true }) // untuk menambahkan createdAt dan updateAt di document(table)
 
 module.exports = mongoose.model('Player', playerSchema);
