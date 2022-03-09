@@ -2,6 +2,9 @@ const Player = require('../player/model');
 const path = require('path');
 const fs = require('fs');
 const config = require('../../config');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { json } = require('express');
 
 module.exports = {
   signup: async (req, res, next) => {
@@ -9,7 +12,7 @@ module.exports = {
       const payload = req.body;
 
       if (req.file) {
-        let tmp_path= req.file.path;
+        let tmp_path = req.file.path;
         let originaExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
         let filename = req.file.filename + '.' + originaExt;
         let target_path = path.resolve(config.rootPath, `public/uploads/${filename}`)
@@ -56,5 +59,34 @@ module.exports = {
       }
       next(err);
     }
+  },
+  signin: (req, res, next) => {
+    const { email, password } = req.body;
+
+    Player.findOne({ email }).then((player) => {
+      if (player) {
+        const checkPassword = bcrypt.compareSync(password, player.password)
+        if (checkPassword) {
+          const token = jwt.sign({
+            player: {
+              id: player.id,
+              username: player.username,
+              name: player.id,
+              email: player.email,
+              phoneNumber: player.phoneNumber,
+              avatar: player.avatar,
+            }
+          }, config.jwtKey)
+
+          res.status(200).json({ data: { token } });
+        } else {
+          res.status(403).json({ message: 'password yang dimasukan salah' })
+        }
+      } else {
+        res.status(403).json({ message: 'email yang dimasukan belum terdaftar' });
+      }
+    }).catch((err) => {
+      res.status(500).json({ message: err.message || 'Terjadi kesalahan pada server' });
+    })
   }
 }
