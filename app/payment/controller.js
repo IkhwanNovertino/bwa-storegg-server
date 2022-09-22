@@ -11,7 +11,6 @@ module.exports = {
 
       const payment = await Payment.find().populate('banks');
 
-
       res.render('admin/payment/view_payment', {
         name: req.session.user.name,
         title: 'Halaman Payment',
