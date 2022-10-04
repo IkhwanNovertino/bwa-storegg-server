@@ -61,7 +61,6 @@ playerSchema.path('email').validate(async function (value) {
   } catch (err) {
     throw err
   }
-
 }, attr => `${attr.value} sudah terdaftar`)
 
 //untuk membuat passwordnya di hash
