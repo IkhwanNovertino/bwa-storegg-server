@@ -178,17 +178,16 @@ module.exports = {
           }
         }
       ])
-
       const category = await Category.find({});
 
       category.forEach(element => {
         count.forEach(data => {
-          if (data._id.toString() === element._id.toString) {
-            data.name = element.name;
+          if (data._id.toString() === element._id.toString()) {
+            data.name = element.name
           }
         })
       })
-
+      console.log('count >>>', count);
       const history = await Transaction.find({ player: req.player._id })
         .populate('category')
         .sort({ 'updateAt': -1 })
